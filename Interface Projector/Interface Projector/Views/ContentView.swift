@@ -10,7 +10,7 @@ import AppKit
 
 struct ContentView: View {
     
-    @State var desktopImage: Image = Image("Default_Image")
+    @State var desktopImage: Image = Image("Default_Image_macOS_14")
     @State var appImage: Image = Image("Interface_Projector_Interface")
     @State var showAppImage: Bool = false
     @State var interfaceScale: Float = 0.75
@@ -27,7 +27,7 @@ struct ContentView: View {
                 ScrollView {
                     VStack(alignment: .leading) {
                         HStack {
-                            ImageDropView(prompt: "Specify a Desktop Image: ", defaultImage: Image("Default_Image"), droppedImage: $desktopImage)
+                            ImageDropView(prompt: "Specify a Desktop Image: ", defaultImage: Image("Default_Image_macOS_14"), droppedImage: $desktopImage)
                         }
                         if showAppImage {
                             ImageDropView(prompt: "Specify an Interface Image: ", defaultImage: Image("Interface_Projector_Interface"), droppedImage: $appImage)
@@ -46,6 +46,11 @@ struct ContentView: View {
                         Divider()
                         Button("Render") {
                             Task {
+                                // Correct filename if needed
+                                if !filename.hasSuffix(".png") {
+                                    filename = filename + ".png"
+                                }
+                                // Render and save image
                                 let renderer = ImageRenderer(content: ImageView(scale: 10, desktopImage: $desktopImage, showAppImage: $showAppImage, appImage: $appImage, interfaceScale: $interfaceScale))
                                 if let image = renderer.nsImage {
                                     print(image.size)
